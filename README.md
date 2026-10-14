@@ -1,5 +1,7 @@
 # YouTube Controls
 
+![The indicator in the GNOME top bar showing the YouTube video playing in Chrome, with previous, play/pause and next buttons and its settings window](docs/demo.webp)
+
 A GNOME Shell extension that puts whatever you're watching on YouTube in the top bar: video title, previous, play/pause and next. It's for when the video is in a Chrome window three workspaces away and you only want to pause it.
 
 It only works with Google Chrome and only shows up for YouTube. Other media in Chrome, like Twitch or a podcast site, is ignored.
