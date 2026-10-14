@@ -16,7 +16,9 @@ const CHROME_WM_CLASS = 'google-chrome';
 const YouTubeIndicator = GObject.registerClass(
 class YouTubeIndicator extends PanelMenu.Button {
     _init(extension) {
-        super._init(0.0, 'YouTube Controls', true);
+        super._init(0.0, 'YouTube Controls');
+
+        this.menu.addAction('Settings', () => extension.openPreferences());
 
         const box = new St.BoxLayout({style_class: 'youtube-controls-box'});
 
