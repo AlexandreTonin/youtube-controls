@@ -15,15 +15,16 @@ const CHROME_WM_CLASS = 'google-chrome';
 
 const YouTubeIndicator = GObject.registerClass(
 class YouTubeIndicator extends PanelMenu.Button {
-    _init(extensionPath) {
+    _init(extension) {
         super._init(0.0, 'YouTube Controls', true);
 
         const box = new St.BoxLayout({style_class: 'youtube-controls-box'});
 
-        box.add_child(new St.Icon({
-            gicon: Gio.icon_new_for_string(`${extensionPath}/icons/youtube-symbolic.svg`),
+        this._icon = new St.Icon({
+            gicon: Gio.icon_new_for_string(`${extension.path}/icons/youtube-symbolic.svg`),
             style_class: 'system-status-icon',
-        }));
+        });
+        box.add_child(this._icon);
 
         this._label = new St.Label({
             style_class: 'youtube-controls-label',
@@ -34,15 +35,21 @@ class YouTubeIndicator extends PanelMenu.Button {
 
         this._playPauseIcon = new St.Icon({style_class: 'system-status-icon'});
 
-        box.add_child(this._createButton(
+        this._controls = new St.BoxLayout({style_class: 'youtube-controls-box'});
+        this._controls.add_child(this._createButton(
             new St.Icon({icon_name: 'media-skip-backward-symbolic', style_class: 'system-status-icon'}),
             () => this._player.previous()));
-        box.add_child(this._createButton(this._playPauseIcon, () => this._player.playPause()));
-        box.add_child(this._createButton(
+        this._controls.add_child(this._createButton(this._playPauseIcon, () => this._player.playPause()));
+        this._controls.add_child(this._createButton(
             new St.Icon({icon_name: 'media-skip-forward-symbolic', style_class: 'system-status-icon'}),
             () => this._player.next()));
+        box.add_child(this._controls);
 
         this.add_child(box);
+
+        this._settings = extension.getSettings();
+        this._settings.connectObject('changed', () => this._applySettings(), this);
+        this._applySettings();
 
         this._youTubeTrackId = null;
 
@@ -53,6 +60,13 @@ class YouTubeIndicator extends PanelMenu.Button {
         global.display.connectObject('window-created', (_display, window) => this._watchWindow(window), this);
 
         this._sync();
+    }
+
+    _applySettings() {
+        this._icon.visible = this._settings.get_boolean('show-icon');
+        this._label.visible = this._settings.get_boolean('show-title');
+        this._controls.visible = this._settings.get_boolean('show-controls');
+        this._label.style = `max-width: ${this._settings.get_int('max-title-width')}px;`;
     }
 
     _watchWindow(window) {
@@ -100,6 +114,7 @@ class YouTubeIndicator extends PanelMenu.Button {
     }
 
     _onDestroy() {
+        this._settings.disconnectObject(this);
         global.display.disconnectObject(this);
         global.display.list_all_windows().forEach(window => window.disconnectObject(this));
         this._player.destroy();
@@ -109,12 +124,28 @@ class YouTubeIndicator extends PanelMenu.Button {
 
 export default class YouTubeControlsExtension extends Extension {
     enable() {
-        this._indicator = new YouTubeIndicator(this.path);
-        Main.panel.addToStatusArea(this.uuid, this._indicator);
+        this._settings = this.getSettings();
+        this._settings.connectObject(
+            'changed::position', () => this._addIndicator(),
+            'changed::position-index', () => this._addIndicator(),
+            this);
+        this._addIndicator();
     }
 
     disable() {
+        this._settings.disconnectObject(this);
+        this._settings = null;
         this._indicator.destroy();
         this._indicator = null;
+    }
+
+    _addIndicator() {
+        this._indicator?.destroy();
+        this._indicator = new YouTubeIndicator(this);
+        Main.panel.addToStatusArea(
+            this.uuid,
+            this._indicator,
+            this._settings.get_int('position-index'),
+            this._settings.get_string('position'));
     }
 }

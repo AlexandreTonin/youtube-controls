@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.youtube-controls" path="/org/gnome/shell/extensions/youtube-controls/">
+    <key name="show-icon" type="b">
+      <default>true</default>
+      <summary>Show the YouTube icon</summary>
+    </key>
+    <key name="show-title" type="b">
+      <default>true</default>
+      <summary>Show the video title</summary>
+    </key>
+    <key name="show-controls" type="b">
+      <default>true</default>
+      <summary>Show the previous, play/pause and next buttons</summary>
+    </key>
+    <key name="max-title-width" type="i">
+      <range min="50" max="1000"/>
+      <default>300</default>
+      <summary>Maximum width of the video title, in pixels</summary>
+    </key>
+    <key name="position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'right'</default>
+      <summary>Area of the top bar where the indicator is placed</summary>
+    </key>
+    <key name="position-index" type="i">
+      <range min="0" max="20"/>
+      <default>0</default>
+      <summary>Order of the indicator among the items already in its area, 0 being the first</summary>
+    </key>
+  </schema>
+</schemalist>

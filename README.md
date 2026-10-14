@@ -19,6 +19,14 @@ Log out and back in (on Wayland, GNOME Shell can't be restarted in place), then 
 gnome-extensions enable youtube-controls@AlexandreTonin
 ```
 
+## Settings
+
+Open them from the Extensions app, or with `gnome-extensions prefs youtube-controls@AlexandreTonin`. Changes apply right away.
+
+- Show or hide the YouTube icon, the video title and the playback buttons
+- Maximum title width, in pixels (longer titles get an ellipsis)
+- Which area of the top bar the indicator sits in (left, center or right) and its order among the items already there
+
 ## How it works
 
 Chrome already publishes its media sessions over [MPRIS](https://specifications.freedesktop.org/mpris-spec/latest/), the D-Bus interface Linux desktops use for media keys. It registers as `org.mpris.MediaPlayer2.chromium.instanceN`, and `N` changes every time Chrome starts. The extension doesn't look for a fixed name. It watches the `org.mpris.MediaPlayer2.chromium` namespace and attaches to whichever instance appears.
@@ -58,6 +66,12 @@ dbus-run-session -- gnome-shell --nested --wayland
 ```
 
 The nested shell has its own D-Bus session, so Chrome has to be started inside it.
+
+The compiled schema (`schemas/gschemas.compiled`) is committed so a plain `git clone` works. If you change the XML schema, recompile it before committing:
+
+```sh
+glib-compile-schemas --strict schemas/
+```
 
 Logs show up in `journalctl -f -o cat /usr/bin/gnome-shell`.
 
