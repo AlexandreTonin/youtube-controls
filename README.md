@@ -21,7 +21,7 @@ gnome-extensions enable youtube-controls@AlexandreTonin
 
 ## Settings
 
-Open them from the Extensions app, or with `gnome-extensions prefs youtube-controls@AlexandreTonin`. Changes apply right away.
+Open them from the Extensions app, by clicking the indicator's icon or title and choosing **Settings**, or with `gnome-extensions prefs youtube-controls@AlexandreTonin`. Changes apply right away.
 
 - Show or hide the YouTube icon, the video title and the playback buttons
 - Maximum title width, in pixels (longer titles get an ellipsis)
