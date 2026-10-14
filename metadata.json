@@ -1,0 +1,8 @@
+{
+  "uuid": "youtube-controls@AlexandreTonin",
+  "name": "YouTube Controls",
+  "description": "Shows the YouTube video playing in Google Chrome on the top bar, with previous, play/pause and next buttons.",
+  "shell-version": ["45", "46", "47", "48", "49", "50"],
+  "url": "https://github.com/AlexandreTonin/youtube-controls",
+  "version": 1
+}
