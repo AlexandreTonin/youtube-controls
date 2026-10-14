@@ -10,15 +10,23 @@ It only works with Google Chrome and only shows up for YouTube. Other media in C
 
 You need GNOME Shell 45 or newer and Google Chrome.
 
+Download `youtube-controls@AlexandreTonin.shell-extension.zip` from the [latest release](https://github.com/AlexandreTonin/youtube-controls/releases/latest) and install it:
+
 ```sh
-git clone https://github.com/AlexandreTonin/youtube-controls.git \
-  ~/.local/share/gnome-shell/extensions/youtube-controls@AlexandreTonin
+gnome-extensions install youtube-controls@AlexandreTonin.shell-extension.zip
 ```
 
-Log out and back in (on Wayland, GNOME Shell can't be restarted in place), then enable it:
+Restart GNOME Shell so it picks up the new extension. On X11, press `Alt+F2`, type `r` and press `Enter`. On Wayland, log out and back in. Then enable it:
 
 ```sh
 gnome-extensions enable youtube-controls@AlexandreTonin
+```
+
+To run the latest code instead, clone the repository straight into the extensions folder and follow the same restart and enable steps:
+
+```sh
+git clone https://github.com/AlexandreTonin/youtube-controls.git \
+  ~/.local/share/gnome-shell/extensions/youtube-controls@AlexandreTonin
 ```
 
 ## Settings
@@ -84,3 +92,5 @@ Logs show up in `journalctl -f -o cat /usr/bin/gnome-shell`.
 ## License
 
 GPL-3.0. See [LICENSE](LICENSE).
+
+YouTube Controls is not affiliated with, funded by, or in any way associated with YouTube or Google. YouTube and Google Chrome are trademarks of Google LLC.
