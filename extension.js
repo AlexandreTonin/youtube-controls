@@ -35,15 +35,15 @@ class YouTubeIndicator extends PanelMenu.Button {
         this._label.clutter_text.ellipsize = Pango.EllipsizeMode.END;
         box.add_child(this._label);
 
-        this._playPauseIcon = new St.Icon({style_class: 'system-status-icon'});
+        this._playPauseIcon = new St.Icon();
 
-        this._controls = new St.BoxLayout({style_class: 'youtube-controls-box'});
+        this._controls = new St.BoxLayout();
         this._controls.add_child(this._createButton(
-            new St.Icon({icon_name: 'media-skip-backward-symbolic', style_class: 'system-status-icon'}),
+            new St.Icon({icon_name: 'media-skip-backward-symbolic'}),
             () => this._player.previous()));
         this._controls.add_child(this._createButton(this._playPauseIcon, () => this._player.playPause()));
         this._controls.add_child(this._createButton(
-            new St.Icon({icon_name: 'media-skip-forward-symbolic', style_class: 'system-status-icon'}),
+            new St.Icon({icon_name: 'media-skip-forward-symbolic'}),
             () => this._player.next()));
         box.add_child(this._controls);
 

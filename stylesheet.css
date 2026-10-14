@@ -3,5 +3,9 @@
 }
 
 .youtube-controls-button {
-    padding: 0 2px;
+    padding: 4px;
+}
+
+.youtube-controls-button > StIcon {
+    icon-size: 16px;
 }
