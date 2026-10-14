@@ -9,6 +9,9 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {ChromePlayer} from './player.js';
+import {isYouTubeWindowFor} from './youtube.js';
+
+const CHROME_WM_CLASS = 'google-chrome';
 
 const YouTubeIndicator = GObject.registerClass(
 class YouTubeIndicator extends PanelMenu.Button {
@@ -41,9 +44,37 @@ class YouTubeIndicator extends PanelMenu.Button {
 
         this.add_child(box);
 
+        this._youTubeTrackId = null;
+
         this._player = new ChromePlayer();
         this._player.connectObject('changed', () => this._sync(), this);
+
+        global.display.list_all_windows().forEach(window => this._watchWindow(window));
+        global.display.connectObject('window-created', (_display, window) => this._watchWindow(window), this);
+
         this._sync();
+    }
+
+    _watchWindow(window) {
+        window.connectObject('notify::title', () => this._sync(), this);
+    }
+
+    _isPlayingOnYouTube() {
+        const {trackId, title} = this._player;
+
+        if (!trackId)
+            return false;
+
+        if (trackId !== this._youTubeTrackId && this._hasYouTubeWindowFor(title))
+            this._youTubeTrackId = trackId;
+
+        return trackId === this._youTubeTrackId;
+    }
+
+    _hasYouTubeWindowFor(title) {
+        return global.display.list_all_windows().some(window =>
+            window.get_wm_class()?.toLowerCase() === CHROME_WM_CLASS &&
+            isYouTubeWindowFor(window.get_title() ?? '', title));
     }
 
     _createButton(icon, onPress) {
@@ -61,16 +92,16 @@ class YouTubeIndicator extends PanelMenu.Button {
     }
 
     _sync() {
-        const title = this._player.title;
-
-        this.visible = title !== '';
-        this._label.text = title;
+        this.visible = this._isPlayingOnYouTube();
+        this._label.text = this._player.title;
         this._playPauseIcon.icon_name = this._player.isPlaying
             ? 'media-playback-pause-symbolic'
             : 'media-playback-start-symbolic';
     }
 
     _onDestroy() {
+        global.display.disconnectObject(this);
+        global.display.list_all_windows().forEach(window => window.disconnectObject(this));
         this._player.destroy();
         super._onDestroy();
     }
