@@ -1,0 +1,11 @@
+.youtube-controls-box {
+    spacing: 6px;
+}
+
+.youtube-controls-label {
+    max-width: 300px;
+}
+
+.youtube-controls-button {
+    padding: 0 2px;
+}
